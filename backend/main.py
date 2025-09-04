@@ -28,9 +28,7 @@ app = FastAPI(title="API de Ingresos y Gastos", description="API para gestionar 
 
 # Configuración de CORS
 origins = [
-    "http://localhost:3000",
-    "localhost:3000",
-    "https://ingresosgatos.netlify.app",
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,
