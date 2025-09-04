@@ -77,7 +77,7 @@ function App() {
     return sum;
   }, 0);
 
-  const totalBalance = bankBalance + cashBalance;
+  
 
   return (
     <>
