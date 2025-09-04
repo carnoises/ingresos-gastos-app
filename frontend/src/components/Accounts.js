@@ -14,7 +14,7 @@ import EditTransactionModal from './EditTransactionModal';
 import EditAccountModal from './EditAccountModal'; // New import
 import { formatCurrency } from '../utils/formatters';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 function Accounts({ accounts, onDataUpdate, loading }) {
     const [editingTransaction, setEditingTransaction] = useState(null);

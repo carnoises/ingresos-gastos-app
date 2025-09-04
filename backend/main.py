@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
+import logging
 
 # Importaciones locales
 import models
@@ -9,8 +10,19 @@ import schemas
 import crud
 from database import SessionLocal, engine
 
+import logging
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Crea las tablas en la base de datos
-models.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+    logger.info("Tablas de la base de datos verificadas/creadas exitosamente.")
+except Exception as e:
+    logger.error(f"No se pudo conectar a la base de datos o crear las tablas: {e}")
+    logger.warning("La aplicación continuará ejecutándose, pero las operaciones de base de datos fallarán.")
 
 app = FastAPI(title="API de Ingresos y Gastos", description="API para gestionar finanzas personales", version="0.1.0")
 

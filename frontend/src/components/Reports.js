@@ -12,7 +12,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import DownloadIcon from '@mui/icons-material/Download';
 import { formatCurrency } from '../utils/formatters';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 // Función para obtener los nombres de los meses en español
 const getMonthName = (monthNumber) => {

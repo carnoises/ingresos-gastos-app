@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import { formatCurrency } from '../utils/formatters'; // Importar la función de formato
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 function Reports() {
     const [reportData, setReportData] = useState(null);

@@ -4,9 +4,12 @@ from sqlalchemy.orm import sessionmaker
 
 import os
 
+import tempfile
+
 # Obtener la URL de la base de datos de las variables de entorno
 # Para desarrollo local, puedes mantener SQLite o configurar una variable de entorno local
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./ingresos_gastos.db")
+TEMP_DIR = tempfile.gettempdir()
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{os.path.join(TEMP_DIR, 'ingresos_gastos.db')}")
 
 # Si es SQLite, añadir connect_args
 connect_args = {}

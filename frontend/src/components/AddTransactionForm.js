@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Importación faltante
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 // Helper para obtener la fecha en formato YYYY-MM-DD
 const getTodayString = () => {

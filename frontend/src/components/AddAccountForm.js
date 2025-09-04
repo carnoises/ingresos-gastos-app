@@ -7,7 +7,7 @@ import {
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 function AddAccountForm({ onAccountAdded }) {
   const [name, setName] = useState('');

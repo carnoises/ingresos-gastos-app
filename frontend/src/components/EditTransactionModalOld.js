@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 const modalStyle = {
   position: 'absolute',

@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
 
 const modalStyle = {
   position: 'absolute',
