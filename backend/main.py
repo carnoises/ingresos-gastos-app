@@ -98,6 +98,20 @@ def create_category_endpoint(category: schemas.CategoryCreate, db: Session = Dep
         raise HTTPException(status_code=400, detail="Ya existe una categoría con este nombre.")
     return crud.create_category(db=db, category=category)
 
+@app.put("/api/categories/{category_id}", response_model=schemas.Category, tags=["Categories"])
+def update_category_endpoint(category_id: int, category: schemas.CategoryCreate, db: Session = Depends(get_db)):
+    db_category = crud.update_category(db, category_id=category_id, category_data=category)
+    if db_category is None:
+        raise HTTPException(status_code=404, detail="Categoría no encontrada.")
+    return db_category
+
+@app.delete("/api/categories/{category_id}", response_model=schemas.Category, tags=["Categories"])
+def delete_category_endpoint(category_id: int, db: Session = Depends(get_db)):
+    db_category = crud.delete_category(db, category_id=category_id)
+    if db_category is None:
+        raise HTTPException(status_code=404, detail="Categoría no encontrada.")
+    return db_category
+
 @app.get("/api/categories/", response_model=List[schemas.Category], tags=["Categories"])
 def read_categories_endpoint(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     categories = crud.get_categories(db, skip=skip, limit=limit)

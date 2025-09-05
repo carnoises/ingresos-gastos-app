@@ -50,6 +50,26 @@ def create_category(db: Session, category: schemas.CategoryCreate):
     db.refresh(db_category)
     return db_category
 
+def update_category(db: Session, category_id: int, category_data: schemas.CategoryCreate):
+    """Actualiza una categoría existente."""
+    db_category = db.query(models.Category).filter(models.Category.id == category_id).first()
+    if not db_category:
+        return None
+    if category_data.name is not None:
+        db_category.name = category_data.name
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def delete_category(db: Session, category_id: int):
+    """Elimina una categoría."""
+    db_category = db.query(models.Category).filter(models.Category.id == category_id).first()
+    if not db_category:
+        return None
+    db.delete(db_category)
+    db.commit()
+    return db_category
+
 def update_account(db: Session, account_id: int, account_data: schemas.AccountUpdate):
     """Actualiza una cuenta existente."""
     db_account = db.query(models.Account).filter(models.Account.id == account_id).first()
