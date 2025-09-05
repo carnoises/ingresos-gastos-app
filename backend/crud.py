@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 import models
 import schemas
+import datetime # Added for datetime.datetime.now()
+from sqlalchemy import func, extract # Added for reports
 
 # --- Funciones CRUD para Cuentas (Accounts) ---
 
 # Este comentario es para forzar un nuevo despliegue en Render. (Intento 2)
-
 
 def get_account(db: Session, account_id: int):
     """Obtiene una cuenta por su ID."""
@@ -57,7 +58,8 @@ def create_transaction(db: Session, transaction: schemas.TransactionCreate):
         amount=abs(transaction.amount), # Guardar siempre el monto en positivo
         type=transaction.type,
         account_id=transaction.account_id,
-        date=transaction.date or datetime.datetime.now() # Usar fecha proporcionada o la actual
+        date=transaction.date or datetime.datetime.now(),
+        to_account_id=transaction.to_account_id # Added for transfers
     )
 
     # 3. Actualizar el balance de la cuenta
@@ -65,16 +67,56 @@ def create_transaction(db: Session, transaction: schemas.TransactionCreate):
         db_account.balance += abs(transaction.amount)
     elif transaction.type == 'expense':
         db_account.balance -= abs(transaction.amount)
+    # Transfers are handled by create_transfer, not here.
+    # If a transfer_in/out transaction is created directly, it will affect balance.
 
     # 4. Añadir los cambios a la sesión y confirmar
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
-    
+
     return db_transaction
 
+def create_transfer(db: Session, transfer: schemas.TransferCreate):
+    from_account = get_account(db, account_id=transfer.from_account_id)
+    to_account = get_account(db, account_id=transfer.to_account_id)
+
+    if not from_account or not to_account:
+        return None # Cuentas no encontradas
+
+    if from_account.id == to_account.id:
+        raise ValueError("No se puede transferir dinero a la misma cuenta.")
+
+    # Crear transacción de salida (débito)
+    db_transaction_out = models.Transaction(
+        description=transfer.description or f"Transferencia a {to_account.name}",
+        amount=transfer.amount,
+        type="transfer_out",
+        account_id=from_account.id,
+        date=datetime.datetime.now()
+    )
+    from_account.balance -= transfer.amount
+
+    # Crear transacción de entrada (crédito)
+    db_transaction_in = models.Transaction(
+        description=transfer.description or f"Transferencia desde {from_account.name}",
+        amount=transfer.amount,
+        type="transfer_in",
+        account_id=to_account.id,
+        to_account_id=from_account.id, # Link back to the source of the transfer
+        date=datetime.datetime.now()
+    )
+    to_account.balance += transfer.amount
+
+    db.add(db_transaction_out)
+    db.add(db_transaction_in)
+    db.commit()
+    db.refresh(db_transaction_out)
+    db.refresh(db_transaction_in)
+
+    return {"from_transaction": db_transaction_out, "to_transaction": db_transaction_in}
+
 # --- Funciones para Reportes ---
-from sqlalchemy import func, extract
 
 def get_monthly_report(db: Session, year: int, month: int):
     """
@@ -155,7 +197,7 @@ def delete_transaction(db: Session, transaction_id: int):
 
     return db_transaction
 
-on_data: schemas.TransactionUpdate):
+def update_transaction(db: Session, transaction_id: int, transaction_data: schemas.TransactionUpdate):
     """
     Actualiza una transacción y ajusta el balance de la cuenta.
     """
