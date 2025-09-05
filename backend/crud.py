@@ -22,11 +22,33 @@ def get_accounts(db: Session, skip: int = 0, limit: int = 100):
 
 def create_account(db: Session, account: schemas.AccountCreate):
     """Crea una nueva cuenta."""
-    db_account = models.Account(name=account.name, balance=account.balance)
+    db_account = models.Account(name=account.name, balance=account.balance, type=account.type)
     db.add(db_account)
     db.commit()
     db.refresh(db_account)
     return db_account
+
+# --- Funciones CRUD para Categorías (Categories) ---
+
+def get_category(db: Session, category_id: int):
+    """Obtiene una categoría por su ID."""
+    return db.query(models.Category).filter(models.Category.id == category_id).first()
+
+def get_category_by_name(db: Session, name: str):
+    """Obtiene una categoría por su nombre."""
+    return db.query(models.Category).filter(models.Category.name == name).first()
+
+def get_categories(db: Session, skip: int = 0, limit: int = 100):
+    """Obtiene todas las categorías."""
+    return db.query(models.Category).offset(skip).limit(limit).all()
+
+def create_category(db: Session, category: schemas.CategoryCreate):
+    """Crea una nueva categoría."""
+    db_category = models.Category(name=category.name)
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
 
 def update_account(db: Session, account_id: int, account_data: schemas.AccountUpdate):
     """Actualiza una cuenta existente."""

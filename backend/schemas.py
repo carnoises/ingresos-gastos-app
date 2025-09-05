@@ -9,6 +9,7 @@ class TransactionBase(BaseModel):
     amount: float
     type: str # "income", "expense", "transfer_in", "transfer_out"
     to_account_id: Optional[int] = None # New field
+    category_id: Optional[int] = None # New field for categories
 
 class TransactionCreate(TransactionBase):
     account_id: int
@@ -19,6 +20,21 @@ class Transaction(TransactionBase):
     date: datetime
     account_id: int
     to_account_id: Optional[int] = None # New field
+    category_id: Optional[int] = None # New field
+
+    class Config:
+        from_attributes = True
+
+# --- Esquemas para Categorías ---
+
+class CategoryBase(BaseModel):
+    name: str
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class Category(CategoryBase):
+    id: int
 
     class Config:
         from_attributes = True
