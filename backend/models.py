@@ -10,8 +10,10 @@ class Account(Base):
     name = Column(String, unique=True, index=True, nullable=False)
     balance = Column(Float, default=0.0, nullable=False)
     
-    # Relación con transacciones
-    transactions = relationship("Transaction", back_populates="account")
+    # Relación con transacciones donde esta cuenta es el origen (account_id)
+    transactions = relationship("Transaction", foreign_keys="[Transaction.account_id]", back_populates="account")
+    # Relación con transacciones donde esta cuenta es el destino (to_account_id)
+    received_transfers = relationship("Transaction", foreign_keys="[Transaction.to_account_id]")
 
 class Transaction(Base):
     __tablename__ = "transactions"
