@@ -143,9 +143,9 @@ function App() {
             <Reports />
           </TabPanel>
 
-          <TabPanel value={currentTab} index={2}>
-            <Reports />
-          </TabPanel>
+
+
+
         </Paper>
       </Container>
     </>
