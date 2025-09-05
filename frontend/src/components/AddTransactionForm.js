@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-    Button, TextField, Card, Box, 
-    Select, MenuItem, InputLabel, FormControl, FormLabel, RadioGroup, 
+import {
+    Button, TextField, Card, Box,
+    Select, MenuItem, InputLabel, FormControl, FormLabel, RadioGroup,
     FormControlLabel, Radio, CardContent, CardHeader, Alert,
     InputAdornment, Grid
 } from '@mui/material';
@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'; // Importación faltante
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 // Helper para obtener la fecha en formato YYYY-MM-DD
 const getTodayString = () => {
@@ -24,9 +24,25 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
     const [amount, setAmount] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('expense');
+    const [categoryId, setCategoryId] = useState(''); // New state for category
+    const [categories, setCategories] = useState([]); // New state to store categories
     const [date, setDate] = useState(getTodayString());
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/categories/`);
+            setCategories(response.data);
+        } catch (err) {
+            console.error("Error al cargar categorías:", err);
+            setError('Error al cargar las categorías disponibles.');
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,19 +60,21 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
                 amount: parseFloat(amount),
                 description: description,
                 type: type,
-                date: date
+                date: date,
+                category_id: categoryId || null // Include category_id
             };
             await axios.post(`${API_URL}/api/transactions/`, newTransaction);
-            
+
             // Limpiar formulario
             setAccountId('');
             setAmount('');
             setDescription('');
             setDate(getTodayString());
-            
+            setCategoryId(''); // Clear category as well
+
             // Mostrar mensaje de éxito
             setSuccess('Transacción añadida exitosamente!');
-            
+
             if (onTransactionAdded) {
                 onTransactionAdded();
             }
@@ -72,8 +90,8 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
 
     return (
         <Card elevation={2} sx={{ mb: 3 }}>
-            <CardHeader 
-                title="Añadir Transacción" 
+            <CardHeader
+                title="Añadir Transacción"
                 titleTypographyProps={{ variant: 'h6' }}
                 avatar={<ReceiptIcon color="primary" />}
             />
@@ -82,34 +100,34 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
                     <FormControl component="fieldset" margin="normal" fullWidth>
                         <FormLabel component="legend">Tipo de Transacción</FormLabel>
                         <RadioGroup row value={type} onChange={(e) => setType(e.target.value)}>
-                            <FormControlLabel 
-                                value="expense" 
-                                control={<Radio />} 
+                            <FormControlLabel
+                                value="expense"
+                                control={<Radio />}
                                 label={
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <RemoveIcon color="error" sx={{ mr: 0.5 }} />
                                         Gasto
                                     </Box>
-                                } 
+                                }
                             />
-                            <FormControlLabel 
-                                value="income" 
-                                control={<Radio />} 
+                            <FormControlLabel
+                                value="income"
+                                control={<Radio />}
                                 label={
                                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                         <AddIcon color="success" sx={{ mr: 0.5 }} />
                                         Ingreso
                                     </Box>
-                                } 
+                                }
                             />
                         </RadioGroup>
                     </FormControl>
 
                     <FormControl fullWidth margin="normal" required>
                         <InputLabel>Cuenta</InputLabel>
-                        <Select 
-                            value={accountId} 
-                            label="Cuenta" 
+                        <Select
+                            value={accountId}
+                            label="Cuenta"
                             onChange={(e) => setAccountId(e.target.value)}
                         >
                             {accounts.map(acc => (
@@ -119,6 +137,24 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
                             ))}
                         </Select>
                     </FormControl>
+
+                    {type === 'expense' && (
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel>Categoría</InputLabel>
+                            <Select
+                                value={categoryId}
+                                label="Categoría"
+                                onChange={(e) => setCategoryId(e.target.value)}
+                            >
+                                <MenuItem value=""><em>Sin Categoría</em></MenuItem>
+                                {categories.map(cat => (
+                                    <MenuItem key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
 
                     <TextField
                         label="Descripción"
@@ -177,10 +213,10 @@ function AddTransactionForm({ accounts, onTransactionAdded }) {
                             {success}
                         </Alert>
                     )}
-                    <Button 
-                        type="submit" 
-                        variant="contained" 
-                        color="primary" 
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
                         fullWidth
                         sx={{ mt: 2 }}
                         startIcon={<ReceiptIcon />}
