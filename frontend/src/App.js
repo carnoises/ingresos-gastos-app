@@ -119,7 +119,7 @@ function App() {
             </Tabs>
           </Box>
 
-          <TabPanel value={currentTab} index={0}>
+                    <TabPanel value={currentTab} index={0}>
             <Grid container spacing={3}>
               <Grid item xs={12} md={4}>
                 <AddTransactionForm accounts={accounts} onTransactionAdded={handleDataUpdate} />
@@ -137,6 +137,10 @@ function App() {
                 <AddTransferForm onTransferCompleted={handleDataUpdate} />
               </Grid>
             </Grid>
+          </TabPanel>
+
+          <TabPanel value={currentTab} index={2}>
+            <Reports />
           </TabPanel>
 
           <TabPanel value={currentTab} index={2}>
