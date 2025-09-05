@@ -8,6 +8,7 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 import Accounts from './components/Accounts';
 import AddAccountForm from './components/AddAccountForm';
