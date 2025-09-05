@@ -15,6 +15,7 @@ import AddAccountForm from './components/AddAccountForm';
 import AddTransactionForm from './components/AddTransactionForm';
 import AddTransferForm from './components/AddTransferForm';
 import Reports from './components/Reports';
+import AddCategoryForm from './components/AddCategoryForm';
 import { formatCurrency } from './utils/formatters';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
