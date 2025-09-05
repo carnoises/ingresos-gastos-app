@@ -142,7 +142,14 @@ function App() {
           </TabPanel>
 
           <TabPanel value={currentTab} index={2}>
-            <Reports />
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <AddCategoryForm onCategoryAdded={handleDataUpdate} />
+              </Grid>
+              <Grid item xs={12}>
+                <Reports />
+              </Grid>
+            </Grid>
           </TabPanel>
 
 
