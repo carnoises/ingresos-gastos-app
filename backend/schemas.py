@@ -7,7 +7,8 @@ from typing import List, Optional
 class TransactionBase(BaseModel):
     description: str | None = None
     amount: float
-    type: str # "income" o "expense"
+    type: str # "income", "expense", "transfer_in", "transfer_out"
+    to_account_id: Optional[int] = None # New field
 
 class TransactionCreate(TransactionBase):
     account_id: int
@@ -17,9 +18,17 @@ class Transaction(TransactionBase):
     id: int
     date: datetime
     account_id: int
+    to_account_id: Optional[int] = None # New field
 
     class Config:
         from_attributes = True
+
+# New TransferCreate schema
+class TransferCreate(BaseModel):
+    from_account_id: int
+    to_account_id: int
+    amount: float
+    description: str | None = None
 
 # --- Esquemas para Cuentas ---
 

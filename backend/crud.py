@@ -141,6 +141,10 @@ def delete_transaction(db: Session, transaction_id: int):
         db_account.balance -= db_transaction.amount
     elif db_transaction.type == 'expense':
         db_account.balance += db_transaction.amount
+    elif db_transaction.type == 'transfer_out':
+        db_account.balance += db_transaction.amount # Add back to source account
+    elif db_transaction.type == 'transfer_in':
+        db_account.balance -= db_transaction.amount # Subtract from destination account
 
     # 4. Eliminar la transacción y confirmar los cambios
     db.delete(db_transaction)
@@ -149,6 +153,38 @@ def delete_transaction(db: Session, transaction_id: int):
     return db_transaction
 
 def update_transaction(db: Session, transaction_id: int, transaction_data: schemas.TransactionUpdate):
+    """
+    Actualiza una transacción y ajusta el balance de la cuenta.
+    """
+    db_transaction = db.query(models.Transaction).filter(models.Transaction.id == transaction_id).first()
+    if not db_transaction:
+        return None
+
+    db_account = db_transaction.account
+
+    # Revertir el monto original de la cuenta
+    if db_transaction.type == 'income':
+        db_account.balance -= db_transaction.amount
+    else:  # expense
+        db_account.balance += db_transaction.amount
+
+    # Actualizar los campos de la transacción con los nuevos datos
+    if transaction_data.description is not None:
+        db_transaction.description = transaction_data.description
+    if transaction_data.amount is not None:
+        db_transaction.amount = abs(transaction_data.amount)
+    if transaction_data.date is not None:
+        db_transaction.date = transaction_data.date
+
+    # Aplicar el nuevo monto a la cuenta
+    if db_transaction.type == 'income':
+        db_account.balance += db_transaction.amount
+    else:  # expense
+        db_account.balance -= db_transaction.amount
+
+    db.commit()
+    db.refresh(db_transaction)
+    return db_transactionon_data: schemas.TransactionUpdate):
     """
     Actualiza una transacción y ajusta el balance de la cuenta.
     """

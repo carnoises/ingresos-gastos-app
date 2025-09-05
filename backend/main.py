@@ -1,7 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional, Dict
 import logging
 
 # Importaciones locales
@@ -80,6 +77,17 @@ def create_transaction_endpoint(transaction: schemas.TransactionCreate, db: Sess
     if db_transaction is None:
         raise HTTPException(status_code=404, detail="La cuenta especificada no existe.")
     return db_transaction
+
+# Nuevo Endpoint para Transferencias
+@app.post("/api/transfers/", response_model=Dict[str, schemas.Transaction], tags=["Transfers"])
+def create_transfer_endpoint(transfer: schemas.TransferCreate, db: Session = Depends(get_db)):
+    try:
+        result = crud.create_transfer(db=db, transfer=transfer)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Una o ambas cuentas no fueron encontradas.")
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # Endpoint para Reportes
 import datetime
