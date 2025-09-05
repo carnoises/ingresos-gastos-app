@@ -34,6 +34,7 @@ class TransferCreate(BaseModel):
 
 class AccountBase(BaseModel):
     name: str
+    type: str = "Banco" # New field
 
 class AccountCreate(AccountBase):
     balance: float = 0.0

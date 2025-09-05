@@ -9,6 +9,7 @@ class Account(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, unique=True, index=True, nullable=False)
     balance = Column(Float, default=0.0, nullable=False)
+    type = Column(String, nullable=False, default="Banco") # New field for account type
     
     # Relación con transacciones donde esta cuenta es el origen (account_id)
     transactions = relationship("Transaction", foreign_keys="[Transaction.account_id]", back_populates="account")
