@@ -136,6 +136,16 @@ def read_daily_report_endpoint(year: int, month: int, day: int, db: Session = De
     report_data = crud.get_daily_report(db, year=year, month=month, day=day)
     return report_data
 
+@app.get("/api/reports/categorized_expenses", tags=["Reports"])
+def get_categorized_expenses_report_endpoint(year: int = None, month: int = None, db: Session = Depends(get_db)):
+    today = datetime.date.today()
+    if year is None:
+        year = today.year
+    if month is None:
+        month = today.month
+    report_data = crud.get_categorized_expenses_report(db, year=year, month=month)
+    return report_data
+
 @app.delete("/api/transactions/{transaction_id}", response_model=schemas.Transaction, tags=["Transactions"])
 def delete_transaction_endpoint(transaction_id: int, db: Session = Depends(get_db)):
     db_transaction = crud.delete_transaction(db, transaction_id=transaction_id)

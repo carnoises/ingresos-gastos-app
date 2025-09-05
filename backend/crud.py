@@ -211,6 +211,24 @@ def get_daily_report(db: Session, year: int, month: int, day: int):
         "net_balance": total_income - total_expense
     }
 
+def get_categorized_expenses_report(db: Session, year: int, month: int):
+    """
+    Calcula el total de gastos por categoría para un mes y año específicos.
+    """
+    expenses_by_category = db.query(
+        models.Category.name,
+        func.sum(models.Transaction.amount)
+    ).join(models.Transaction).filter(
+        extract('year', models.Transaction.date) == year,
+        extract('month', models.Transaction.date) == month,
+        models.Transaction.type == 'expense'
+    ).group_by(models.Category.name).all()
+
+    return [
+        {"category": name, "total_expense": float(total_expense) if total_expense else 0.0}
+        for name, total_expense in expenses_by_category
+    ]
+
 def delete_transaction(db: Session, transaction_id: int):
     """
     Elimina una transacción y revierte su efecto en el balance de la cuenta.
