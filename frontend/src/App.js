@@ -131,6 +131,14 @@ function App() {
           </TabPanel>
 
           <TabPanel value={currentTab} index={1}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <AddTransferForm onTransferCompleted={handleDataUpdate} />
+              </Grid>
+            </Grid>
+          </TabPanel>
+
+          <TabPanel value={currentTab} index={2}>
             <Reports />
           </TabPanel>
         </Paper>
