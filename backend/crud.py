@@ -4,7 +4,7 @@ import schemas
 
 # --- Funciones CRUD para Cuentas (Accounts) ---
 
-# Este comentario es para forzar un nuevo despliegue en Render.
+# Este comentario es para forzar un nuevo despliegue en Render. (Intento 2)
 
 
 def get_account(db: Session, account_id: int):
