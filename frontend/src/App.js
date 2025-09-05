@@ -115,6 +115,7 @@ function App() {
               aria-label="Secciones de la aplicación"
             >
               <Tab icon={<AccountBalanceWalletIcon />} label="Operaciones" />
+              <Tab icon={<SwapHorizIcon />} label="Transferencias" />
               <Tab icon={<AssessmentIcon />} label="Reportes" />
             </Tabs>
           </Box>
