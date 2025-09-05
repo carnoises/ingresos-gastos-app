@@ -4,6 +4,9 @@ import schemas
 
 # --- Funciones CRUD para Cuentas (Accounts) ---
 
+# Este comentario es para forzar un nuevo despliegue en Render.
+
+
 def get_account(db: Session, account_id: int):
     """Obtiene una cuenta por su ID."""
     return db.query(models.Account).filter(models.Account.id == account_id).first()
