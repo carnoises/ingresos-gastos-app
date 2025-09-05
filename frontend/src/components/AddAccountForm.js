@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { 
     Button, TextField, Card, Box, CardContent, CardHeader,
-    Alert, InputAdornment
+    Alert, InputAdornment, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 function AddAccountForm({ onAccountAdded }) {
   const [name, setName] = useState('');
@@ -88,6 +88,37 @@ function AddAccountForm({ onAccountAdded }) {
               startAdornment: (
                 <InputAdornment position="start">
                   <AttachMoneyIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" sx={{ mt: 2 }}>
+              {success}
+            </Alert>
+          )}
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="primary" 
+            fullWidth
+            sx={{ mt: 2 }}
+            startIcon={<AccountBalanceIcon />}
+          >
+            Crear Cuenta
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default AddAccountForm;yIcon />
                 </InputAdornment>
               ),
             }}

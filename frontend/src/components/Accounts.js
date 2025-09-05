@@ -14,7 +14,7 @@ import EditTransactionModal from './EditTransactionModal';
 import EditAccountModal from './EditAccountModal'; // New import
 import { formatCurrency } from '../utils/formatters';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://ingresos-gastos-backend.onrender.com';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 function Accounts({ accounts, onDataUpdate, loading }) {
     const [editingTransaction, setEditingTransaction] = useState(null);
@@ -114,6 +114,11 @@ function Accounts({ accounts, onDataUpdate, loading }) {
                                     <Typography sx={{ flexGrow: 1, fontWeight: 'bold' }}>
                                         {account.name}
                                     </Typography>
+                                    <Chip 
+                                        label={account.type} 
+                                        size="small" 
+                                        sx={{ ml: 1, mr: 1, bgcolor: 'rgba(0, 0, 0, 0.08)' }}
+                                    />
                                     <IconButton
                                         edge="end"
                                         aria-label="edit account"
